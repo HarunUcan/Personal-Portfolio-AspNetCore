@@ -1,0 +1,22 @@
+﻿@model PersonalPortfolio.WebUI.Dtos.HomeFeatureDtos.ResultHomeFeatureDto
+@{
+    ViewData["Title"] = "Home";
+    ViewData["ActivePage"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Hero Section -->
+<section id="hero" class="hero section">
+
+    <img src="/Kelly-1.0.0/assets/img/hero-bg.jpg" alt="" data-aos="fade-in">
+
+    <div class="container text-center" data-aos="zoom-out" data-aos-delay="100">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2>@Model.Name @Model.LastName</h2>
+                <p>@Model.Description</p>
+                <a href="about.html" class="btn-get-started">About Me</a>
+            </div>
+        </div>
+    </div>
+
+</section><!-- /Hero Section -->
