@@ -1,11 +1,9 @@
-﻿namespace PersonalPortfolio.WebApi.Entities
+﻿namespace PersonalPortfolio.WebApi.Dtos.AboutDtos
 {
-    public class About
+    public class CreateAboutDto
     {
-        public int AboutId { get; set; }
         public string? Title { get; set; }
-        public string? ProfileImage { get; set; }
-        public string? ProfileImageContentType { get; set; }
+        public IFormFile? ProfileImage { get; set; }
         public string? Description1 { get; set; }
         public string? Description2 { get; set; }
         public string? Description3 { get; set; }

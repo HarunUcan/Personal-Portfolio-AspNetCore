@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalPortfolio.WebApi.Context;
 
@@ -11,9 +12,11 @@ using PersonalPortfolio.WebApi.Context;
 namespace PersonalPortfolio.WebApi.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    partial class ApiContextModelSnapshot : ModelSnapshot
+    [Migration("20250605195442_mig3")]
+    partial class mig3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace PersonalPortfolio.WebApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfileImageContentType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -108,9 +108,6 @@ namespace PersonalPortfolio.WebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HomeFeatureId"));
 
                     b.Property<string>("BgImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BgImageContentType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")

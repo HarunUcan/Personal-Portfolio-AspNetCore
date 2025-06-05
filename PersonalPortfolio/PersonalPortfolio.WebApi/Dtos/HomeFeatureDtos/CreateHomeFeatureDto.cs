@@ -1,6 +1,6 @@
 ﻿namespace PersonalPortfolio.WebApi.Dtos.HomeFeatureDtos
 {
-    public class UpdateHomeFeatureDto
+    public class CreateHomeFeatureDto
     {
         public string Name { get; set; }
         public string LastName { get; set; }

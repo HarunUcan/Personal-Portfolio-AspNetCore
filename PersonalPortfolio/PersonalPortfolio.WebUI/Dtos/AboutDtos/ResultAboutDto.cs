@@ -1,6 +1,6 @@
-﻿namespace PersonalPortfolio.WebApi.Entities
+﻿namespace PersonalPortfolio.WebUI.Dtos.AboutDtos
 {
-    public class About
+    public class ResultAboutDto
     {
         public int AboutId { get; set; }
         public string? Title { get; set; }

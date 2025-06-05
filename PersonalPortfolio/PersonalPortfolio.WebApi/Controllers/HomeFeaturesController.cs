@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonalPortfolio.WebApi.Context;
 using PersonalPortfolio.WebApi.Dtos.HomeFeatureDtos;
+using PersonalPortfolio.WebApi.Entities;
 
 namespace PersonalPortfolio.WebApi.Controllers
 {
@@ -28,6 +29,39 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(homeFeatures);
         }
 
+        [HttpPost]
+        public IActionResult CreateHomeFeature(CreateHomeFeatureDto createHomeFeatureDto)
+        {
+            if (createHomeFeatureDto == null)
+            {
+                return BadRequest("Home feature cannot be null.");
+            }
+
+            byte[] bgImage = null;
+            if (createHomeFeatureDto.BgImage != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    createHomeFeatureDto.BgImage.CopyTo(memoryStream);
+                    bgImage = memoryStream.ToArray();
+                }
+            }
+
+            var newFeature = new HomeFeature
+            {
+                Name = createHomeFeatureDto.Name,
+                LastName = createHomeFeatureDto.LastName,
+                Description = createHomeFeatureDto.Description,
+                BgImage = bgImage != null ? Convert.ToBase64String(bgImage) : null,
+                BgImageContentType = createHomeFeatureDto.BgImage?.ContentType
+            };
+
+            _context.HomeFeatures.Add(newFeature);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetHomeFeatures), new { id = newFeature.HomeFeatureId }, newFeature);
+        }
+
         [HttpPut]
         public IActionResult UpdateHomeFeatures(UpdateHomeFeatureDto updateHomeFeatureDto)
         {
@@ -42,12 +76,24 @@ namespace PersonalPortfolio.WebApi.Controllers
                 return NotFound("Home feature not found.");
             }
 
+            byte[] bgImage = null;
+            if (updateHomeFeatureDto.BgImage != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    updateHomeFeatureDto.BgImage.CopyTo(memoryStream);
+                    bgImage = memoryStream.ToArray();
+                }
+            }
+
             existingFeature.Name = updateHomeFeatureDto.Name;
             existingFeature.LastName = updateHomeFeatureDto.LastName;
             existingFeature.Description = updateHomeFeatureDto.Description;
 
-            if(updateHomeFeatureDto.BgImageUrl != null)
-                existingFeature.BgImageUrl = updateHomeFeatureDto.BgImageUrl;
+            existingFeature.BgImage = bgImage != null ? Convert.ToBase64String(bgImage) : existingFeature.BgImage;
+            existingFeature.BgImageContentType = updateHomeFeatureDto.BgImage?.ContentType ?? existingFeature.BgImageContentType;
+
+            _context.HomeFeatures.Update(existingFeature);
 
             _context.SaveChanges();
 
