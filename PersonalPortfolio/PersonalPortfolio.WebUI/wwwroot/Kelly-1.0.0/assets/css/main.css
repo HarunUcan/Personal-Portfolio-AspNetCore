@@ -156,7 +156,7 @@ h6 {
 }
 
 .header .logo img {
-  max-height: 36px;
+  max-height: 50px;
   margin-right: 8px;
 }
 
@@ -170,19 +170,30 @@ h6 {
 
 .header .header-social-links {
   padding-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .header .header-social-links a {
   color: color-mix(in srgb, var(--default-color), transparent 40%);
   padding-left: 6px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: 0.3s;
   font-size: 16px;
 }
 
-.header .header-social-links a:hover {
-  color: var(--accent-color);
-}
+    .header .header-social-links a img {
+        filter: grayscale(100%);
+        width: 16px;
+        height: 16px;
+    }
+
+    .header .header-social-links a:hover {
+        color: var(--accent-color);
+    }
 
 .header .header-social-links a i {
   line-height: 0px;
@@ -495,6 +506,12 @@ h6 {
   margin: 0 5px;
   transition: 0.3s;
 }
+    .footer .social-links a img {
+        width:16px;
+        height:16px;
+        filter: grayscale(100%);
+        object-fit:contain;
+    }
 
 .footer .social-links a:hover {
   color: var(--accent-color);
@@ -1247,7 +1264,7 @@ section,
   font-size: 28px;
 }
 
-.portfolio .portfolio-item:hover .portfolio-info {
+.portfolio .portfolio-item .portfolio-info {
   opacity: 1;
   bottom: 0;
 }
@@ -1420,4 +1437,14 @@ section,
 --------------------------------------------------------------*/
 .starter-section {
   /* Add your styles here */
+}
+
+.custom-img-style {
+    max-height: 500px; /* veya ihtiyaca göre 600px vs. */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

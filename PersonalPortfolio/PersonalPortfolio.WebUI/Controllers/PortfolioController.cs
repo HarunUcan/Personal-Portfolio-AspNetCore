@@ -1,18 +1,64 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PersonalPortfolio.WebUI.Dtos.PortfolioDtos;
+using PersonalPortfolio.WebUI.Dtos.ProjectCategoryDtos;
+using PersonalPortfolio.WebUI.ViewModels;
 
 namespace PersonalPortfolio.WebUI.Controllers
 {
     public class PortfolioController : Controller
     {
-        public IActionResult Index()
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public PortfolioController(IHttpClientFactory httpClientFactory)
         {
-            return View();
+            _httpClientFactory = httpClientFactory;
+        }
+        public async Task<IActionResult> Index()
+        {
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                var response = await client.GetAsync("https://localhost:7121/api/Projects");
+                var responseCategory = await client.GetAsync("https://localhost:7121/api/ProjectCategories");
+                if (response.IsSuccessStatusCode && responseCategory.IsSuccessStatusCode)
+                {
+                    var projects = await response.Content.ReadFromJsonAsync<List<ResultPortfolioDto>>();
+                    var categories = await responseCategory.Content.ReadFromJsonAsync<List<ProjectCategoryDto>>();
+                    var viewModel = new PortfolioPageViewModel
+                    {
+                        PortfolioList = projects,
+                        ProjectCategoryList = categories
+                    };
+                    return View(viewModel);
+                }
+                else
+                {
+                    // Handle error response
+                    return View("Error");
+                }
+            }
         }
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                var response = await client.GetAsync($"https://localhost:7121/api/Projects/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var project = await response.Content.ReadFromJsonAsync<ResultPortfolioDto>();
+                    if (project == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(project);
+                }
+                else
+                {
+                    // Handle error response
+                    return View("Error");
+                }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿@model PersonalPortfolio.WebUI.Dtos.PortfolioDtos.ResultPortfolioDto
+
 @{
     ViewData["Title"] = "Portfolio Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -38,21 +39,12 @@
 
                     <div class="swiper-wrapper align-items-center">
 
-                        <div class="swiper-slide">
-                            <img src="/Kelly-1.0.0/assets/img/portfolio/app-1.jpg" alt="">
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img src="/Kelly-1.0.0/assets/img/portfolio/product-1.jpg" alt="">
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img src="/Kelly-1.0.0/assets/img/portfolio/branding-1.jpg" alt="">
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img src="/Kelly-1.0.0/assets/img/portfolio/books-1.jpg" alt="">
-                        </div>
+                        @foreach(var image in Model.ProjectImages)
+                        {
+                            <div class="swiper-slide">
+                                <img src="data:image/jpeg;base64,@image.Url" alt="@Model.Name" class="img-fluid custom-img-style">
+                            </div>
+                        }
 
                     </div>
                     <div class="swiper-pagination"></div>
@@ -63,16 +55,16 @@
                 <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
                     <h3>Project information</h3>
                     <ul>
-                        <li><strong>Category</strong>: Web design</li>
+                        <li><strong>Category</strong>: @Model.ProjectCategory.Name</li>
                         <li><strong>Client</strong>: ASU Company</li>
                         <li><strong>Project date</strong>: 01 March, 2020</li>
-                        <li><strong>Project URL</strong>: <a href="#">www.example.com</a></li>
+                        <li><strong>Project URL</strong>: <a href="@Model.ProjectUrl" target="_blank">@Model.ProjectUrl</a></li>
                     </ul>
                 </div>
                 <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-                    <h2>Exercitationem repudiandae officiis neque suscipit</h2>
+                    <h2>@Model.Name</h2>
                     <p>
-                        Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
+                        @Model.Description
                     </p>
                 </div>
             </div>
