@@ -18,7 +18,7 @@ namespace PersonalPortfolio.WebApi.Controllers
         public AboutsController(ApiContext context, IMapper mapper)
         {
             _context = context;
-            this._mapper = mapper;
+            _mapper = mapper;
         }
 
         [HttpGet]

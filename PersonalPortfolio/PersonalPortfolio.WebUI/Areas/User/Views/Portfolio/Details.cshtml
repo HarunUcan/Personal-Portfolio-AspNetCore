@@ -1,0 +1,77 @@
+﻿@model PersonalPortfolio.WebUI.Areas.User.Dtos.PortfolioDtos.ResultPortfolioDto
+
+@{
+    ViewData["Title"] = "Portfolio Details";
+    Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Portfolio Details Section -->
+<section id="portfolio-details" class="portfolio-details section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Portfolio Details</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+                <div class="portfolio-details-slider swiper init-swiper">
+
+                    <script type="application/json" class="swiper-config">
+                        {
+                          "loop": true,
+                          "speed": 600,
+                          "autoplay": {
+                            "delay": 5000
+                          },
+                          "slidesPerView": "auto",
+                          "pagination": {
+                            "el": ".swiper-pagination",
+                            "type": "bullets",
+                            "clickable": true
+                          }
+                        }
+                    </script>
+
+                    <div class="swiper-wrapper align-items-center">
+
+                        @foreach(var image in Model.ProjectImages)
+                        {
+                            <div class="swiper-slide">
+                                <img src="data:image/jpeg;base64,@image.Url" alt="@Model.Name" class="img-fluid custom-img-style">
+                            </div>
+                        }
+
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
+                    <h3>Project information</h3>
+                    <ul>
+                        <li><strong>Category</strong>: @Model.ProjectCategory.Name</li>
+                        <li><strong>Client</strong>: ASU Company</li>
+                        <li><strong>Project date</strong>: 01 March, 2020</li>
+                        <li><strong>Project URL</strong>: <a href="@Model.ProjectUrl" target="_blank">@Model.ProjectUrl</a></li>
+                    </ul>
+                </div>
+                <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
+                    <h2>@Model.Name</h2>
+                    <p>
+                        @Model.Description
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section><!-- /Portfolio Details Section -->
+

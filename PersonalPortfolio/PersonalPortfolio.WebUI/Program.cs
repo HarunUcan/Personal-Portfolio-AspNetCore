@@ -28,9 +28,16 @@ namespace PersonalPortfolio.WebUI
 
             app.UseAuthorization();
 
+            // 1. User Area'yý area adý GÖRÜNMEDEN kullan
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "user_area_without_area_prefix",
+                pattern: "{controller=Home}/{action=Index}/{id?}",
+                defaults: new { area = "User" });
+
+            // 2. Diðer area'lar normal görünsün (örn: Admin)
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

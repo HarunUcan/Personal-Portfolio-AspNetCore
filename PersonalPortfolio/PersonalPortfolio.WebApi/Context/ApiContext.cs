@@ -22,5 +22,6 @@ namespace PersonalPortfolio.WebApi.Context
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
         public DbSet<VisitorLog> VisitorLogs { get; set; }
+        public DbSet<Resume> Resumes { get; set; }
     }
 }
