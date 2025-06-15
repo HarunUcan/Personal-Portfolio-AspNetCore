@@ -1,0 +1,70 @@
+﻿@model List<PersonalPortfolio.WebUI.Areas.Admin.Dtos.SkillDtos.ResultSkillDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["ActivePage"] = "Skills";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-700 mb-8">Mevcut Skiller</h1>
+
+    <!-- Coupon List -->
+    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Mevcut Skiller</h2>
+
+        <table class="w-full table-auto border-collapse">
+            <thead>
+                <tr>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Id</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Başlık</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Yüzde</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Oluşturulma Tarihi</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Son Güncelleme Tarihi</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach(var skill in Model)
+                {
+                    <tr>
+                        <td class="border-b py-4">@skill.SkillId</td>
+                        <td class="border-b py-4">@skill.Name</td>
+                        <td class="border-b py-4">@skill.Percentage</td>
+                        <td class="border-b py-4">@skill.CreatedAt.ToString("dd-MM-yyyy")</td>
+                        <td class="border-b py-4">@skill.UpdatedAt.ToString("dd-MM-yyyy")</td>
+                        
+                        <td class="border-b py-4">
+                            <a asp-area="Admin" asp-controller="Skill" asp-action="Update" asp-route-id="@skill.SkillId"
+                               class="text-yellow-600 hover:text-yellow-800 transition"><i class="fas fa-edit" title="Düzenle"></i></a>
+                            <button onclick="confirmDelete(@skill.SkillId)" class="text-red-600 hover:text-red-800 transition" title="Sil"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function confirmDelete(skillId) {
+        Swal.fire({
+            title: "Emin misiniz?",
+            text: "Bu skill'i silmek istediğinize emin misiniz? Bu işlem geri alınamaz!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Evet, sil!",
+            cancelButtonText: "İptal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/Admin/Skill/Delete?id=${skillId}`;
+            }
+        });
+    }
+</script>
+
+

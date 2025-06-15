@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PersonalPortfolio.WebUI.Areas.Admin.Dtos.AboutDtos;
 
 namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(AuthenticationSchemes = "CookieAuth")]
     public class AboutController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

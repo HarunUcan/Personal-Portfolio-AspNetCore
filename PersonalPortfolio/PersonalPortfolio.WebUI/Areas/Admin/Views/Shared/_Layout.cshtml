@@ -96,23 +96,23 @@
                 </div>
 
                 <!-- HAKKIMDA -->
-                <a asp-area="Admin" asp-controller="Sale" asp-action="Index" class="block py-3 px-6 hover:bg-gray-700 @(ViewData["ActivePage"]?.ToString() == "Sales" ? "bg-pink-700" : "hover:bg-gray-700")">Hakkımda</a>
+                <a asp-area="Admin" asp-controller="About" asp-action="Index" class="block py-3 px-6 hover:bg-gray-700 @(ViewData["ActivePage"]?.ToString() == "About" ? "bg-pink-700" : "hover:bg-gray-700")">Hakkımda</a>
 
                 <!-- SKILLER -->
                 <div class="relative">
-                    <a href="#" onclick="toggleSubmenu('coupons-submenu', 'coupons-icon')"
-                       class="block py-3 px-6 text-white flex items-center justify-between">
+                    <button onclick="toggleSubmenu('skills-submenu', 'skills-icon')"
+                            class="w-full py-3 px-6 text-white flex items-center justify-between">
                         Skiller
-                        <svg id="coupons-icon" class="w-4 h-4 ml-2 transition-transform duration-300"
+                        <svg id="skills-icon" class="w-4 h-4 ml-2 transition-transform duration-300"
                              fill="none" stroke="currentColor" viewBox="0 0 24 24"
                              xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                             </path>
                         </svg>
-                    </a>
-                    <div id="coupons-submenu" class="@(ViewData["ActivePage"]?.ToString() == "Coupons" ? "" : ViewData["ActivePage"]?.ToString() == "Coupon-Create" ? "" : "hidden")">
-                        <a asp-area="Admin" asp-controller="Coupon" asp-action="Index" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Coupons" ? "bg-pink-700" : "hover:bg-gray-700")">Mevcut Skiller</a>
-                        <a asp-area="Admin" asp-controller="Coupon" asp-action="Create" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Coupon-Create" ? "bg-pink-700" : "hover:bg-gray-700")">Skill Ekle</a>
+                    </button>
+                    <div id="skills-submenu" class="@(ViewData["ActivePage"]?.ToString() == "Skills" ? "" : ViewData["ActivePage"]?.ToString() == "Skills-Create" ? "" : "hidden")">
+                        <a asp-area="Admin" asp-controller="Skill" asp-action="Index" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Skills" ? "bg-pink-700" : "hover:bg-gray-700")">Mevcut Skiller</a>
+                        <a asp-area="Admin" asp-controller="Skill" asp-action="Create" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Skill-Create" ? "bg-pink-700" : "hover:bg-gray-700")">Skill Ekle</a>
                     </div>
                 </div>
 

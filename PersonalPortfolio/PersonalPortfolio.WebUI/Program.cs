@@ -6,6 +6,15 @@ namespace PersonalPortfolio.WebUI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", options =>
+                {
+                    options.Cookie.Name = "admin_auth_cookie";
+                    options.LoginPath = "/admin/login"; // Giriþ sayfasý
+                    options.AccessDeniedPath = "/admin/unauthorized";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Süreyi burada belirliyorsun
+                    options.SlidingExpiration = false; // Her istekle süre uzasýn mý?
+                });
 
             // Add services to the container.
             builder.Services.AddHttpClient();
