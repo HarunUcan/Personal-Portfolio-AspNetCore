@@ -25,6 +25,20 @@ namespace PersonalPortfolio.WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
                     ClockSkew = TimeSpan.Zero
                 };
+
+                // Cookie'den token'ý al
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["access_token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             builder.Services.AddDbContext<ApiContext>();

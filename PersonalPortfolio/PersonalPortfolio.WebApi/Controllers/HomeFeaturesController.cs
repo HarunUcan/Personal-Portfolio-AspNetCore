@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonalPortfolio.WebApi.Context;
 using PersonalPortfolio.WebApi.Dtos.HomeFeatureDtos;
@@ -29,6 +30,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(homeFeatures);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateHomeFeature(CreateHomeFeatureDto createHomeFeatureDto)
         {
@@ -62,6 +64,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return CreatedAtAction(nameof(GetHomeFeatures), new { id = newFeature.HomeFeatureId }, newFeature);
         }
 
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateHomeFeatures(UpdateHomeFeatureDto updateHomeFeatureDto)
         {

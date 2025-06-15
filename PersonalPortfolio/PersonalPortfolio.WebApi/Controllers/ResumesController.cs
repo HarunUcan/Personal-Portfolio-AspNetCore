@@ -5,6 +5,7 @@ using PersonalPortfolio.WebApi.Context;
 using PersonalPortfolio.WebApi.Dtos.ResumeDtos;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PersonalPortfolio.WebApi.Controllers
 {
@@ -49,6 +50,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return File(Convert.FromBase64String(pdfEntity.PdfFile), "application/pdf");
         }
 
+        [Authorize]
         [HttpPost("create-resume")]
         public IActionResult CreateResume(CreateResumeDto createResumeDto)
         {
@@ -83,6 +85,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok("Resume created successfully.");
         }
 
+        [Authorize]
         [HttpPut("update-resume")]
         public IActionResult UpdateResume([FromForm] UpdateResumeDto updateResumeDto)
         {

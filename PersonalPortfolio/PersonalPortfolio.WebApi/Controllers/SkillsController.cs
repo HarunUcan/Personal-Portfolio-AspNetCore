@@ -33,6 +33,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(skills);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateSkill(CreateSkillDto createSkillDto)
         {
@@ -48,6 +49,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return CreatedAtAction(nameof(GetSkills), new { id = newSkill.SkillId }, newSkill);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult UpdateSkill(int id, UpdateSkillDto updateSkillDto)
         {
@@ -68,6 +70,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteSkill(int id)
         {

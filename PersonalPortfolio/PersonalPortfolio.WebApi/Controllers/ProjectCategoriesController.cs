@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonalPortfolio.WebApi.Context;
@@ -44,6 +45,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(_mapper.Map<GetByIdProjectCategoryDto>(projectCategory));
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateProjectCategory(CreateProjectCategoryDto categoryDto)
         {
@@ -65,6 +67,7 @@ namespace PersonalPortfolio.WebApi.Controllers
 
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult UpdateProjectCategory(int id, UpdateProjectCategoryDto updateProjectCategoryDto)
         {
@@ -88,6 +91,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok("Project category updated successfully.");
         }
 
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteProjectCategory(int id)
         {

@@ -15,7 +15,7 @@ namespace PersonalPortfolio.WebApi.Security
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             token.AccessTokenExpiration = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Token:AccessTokenExpiration"]));
-            token.RefreshTokenExpiration = DateTime.Now.AddDays(Convert.ToDouble(configuration["Token:RefreshTokenExpiration"]));
+            token.RefreshTokenExpiration = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Token:RefreshTokenExpiration"]));
 
             JwtSecurityToken jwtSecurityToken = new(
                 issuer: configuration["Token:Issuer"],

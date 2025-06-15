@@ -9,6 +9,7 @@ namespace PersonalPortfolio.WebUI
 
             // Add services to the container.
             builder.Services.AddHttpClient();
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

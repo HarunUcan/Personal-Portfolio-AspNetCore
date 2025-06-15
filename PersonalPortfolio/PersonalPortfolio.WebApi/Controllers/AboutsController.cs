@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonalPortfolio.WebApi.Context;
@@ -35,6 +36,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(resultAbout);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateAbout(CreateAboutDto createAboutDto)
         {
@@ -70,6 +72,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateAbout(UpdateAboutDto updateAboutDto)
         {
@@ -111,6 +114,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteAbout()
         {

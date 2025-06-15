@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             return Ok(resultProject);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateProject(CreateProjectDto createProjectDto)
         {
