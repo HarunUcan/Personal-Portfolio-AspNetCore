@@ -51,7 +51,7 @@ namespace PersonalPortfolio.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("create-resume")]
+        [HttpPost]
         public IActionResult CreateResume(CreateResumeDto createResumeDto)
         {
             if (createResumeDto == null || createResumeDto.PdfFile == null)
@@ -86,8 +86,8 @@ namespace PersonalPortfolio.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut("update-resume")]
-        public IActionResult UpdateResume([FromForm] UpdateResumeDto updateResumeDto)
+        [HttpPut]
+        public IActionResult UpdateResume(UpdateResumeDto updateResumeDto)
         {
             if (updateResumeDto == null || updateResumeDto.PdfFile == null)
             {
@@ -118,7 +118,11 @@ namespace PersonalPortfolio.WebApi.Controllers
             var existingResume = _context.Resumes.FirstOrDefault();
             if (existingResume == null)
             {
-                return NotFound("No resume found to update.");
+                CreateResumeDto createResumeDto = new CreateResumeDto
+                {
+                    PdfFile = updateResumeDto.PdfFile
+                };
+                return CreateResume(createResumeDto); // Eğer kayıt yoksa yeni oluştur  
             }
 
             existingResume.PdfFile = Convert.ToBase64String(pdfBytes); // Veritabanında string olarak saklanıyorsa base64 string yap

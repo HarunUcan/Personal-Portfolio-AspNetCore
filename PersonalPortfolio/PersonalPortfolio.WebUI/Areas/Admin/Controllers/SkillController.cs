@@ -31,8 +31,8 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
                 }
                 else
                 {
-                    // Handle error response
-                    return View("Error");
+                    List<ResultSkillDto> emptyList = new();
+                    return View(emptyList);
                 }
             }
         }

@@ -54,7 +54,7 @@
                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="block py-3 px-6 @(ViewData["ActivePage"]?.ToString() == "Dashboard" ? "bg-pink-700" : "hover:bg-gray-700")">Dashboard</a>
 
                 <!-- ANASAYFA -->
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="block py-3 px-6 @(ViewData["ActivePage"]?.ToString() == "Dashboard" ? "bg-pink-700" : "hover:bg-gray-700")">Ana Sayfa</a>
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="block py-3 px-6 @(ViewData["ActivePage"]?.ToString() == "Home" ? "bg-pink-700" : "hover:bg-gray-700")">Ana Sayfa</a>
 
 
                 <!-- ANASAYFA -->
@@ -117,7 +117,7 @@
                 </div>
 
                 <!-- ÖZGEÇMİŞ -->
-                <a asp-area="Admin" asp-controller="User" asp-action="Index" class="block py-3 px-6 hover:bg-gray-700 @(ViewData["ActivePage"]?.ToString() == "Users" ? "bg-pink-700" : "hover:bg-gray-700")">Özgeçmiş</a>
+                <a asp-area="Admin" asp-controller="Resume" asp-action="Index" class="block py-3 px-6 hover:bg-gray-700 @(ViewData["ActivePage"]?.ToString() == "Resume" ? "bg-pink-700" : "hover:bg-gray-700")">Özgeçmiş</a>
 
                 <!-- PORTFOLYO -->
                 <div class="relative">

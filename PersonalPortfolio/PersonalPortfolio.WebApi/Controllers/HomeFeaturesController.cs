@@ -76,7 +76,15 @@ namespace PersonalPortfolio.WebApi.Controllers
             var existingFeature = _context.HomeFeatures.FirstOrDefault();
             if (existingFeature == null)
             {
-                return NotFound("Home feature not found.");
+                // oluştur
+                CreateHomeFeatureDto createHomeFeatureDto = new CreateHomeFeatureDto
+                {
+                    Name = updateHomeFeatureDto.Name,
+                    LastName = updateHomeFeatureDto.LastName,
+                    Description = updateHomeFeatureDto.Description,
+                    BgImage = updateHomeFeatureDto.BgImage
+                };
+                return CreateHomeFeature(createHomeFeatureDto);
             }
 
             byte[] bgImage = null;
@@ -102,6 +110,22 @@ namespace PersonalPortfolio.WebApi.Controllers
 
             return Ok(existingFeature);
 
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public IActionResult DeleteHomeFeature()
+        {
+            var homeFeature = _context.HomeFeatures.FirstOrDefault();
+            if (homeFeature == null)
+            {
+                return NotFound("Home feature not found.");
+            }
+
+            _context.HomeFeatures.Remove(homeFeature);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }

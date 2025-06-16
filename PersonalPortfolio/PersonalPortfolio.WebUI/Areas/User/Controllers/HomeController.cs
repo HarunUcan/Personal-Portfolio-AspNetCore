@@ -28,8 +28,8 @@ namespace PersonalPortfolio.WebUI.Areas.User.Controllers
             }
             else
             {
-                _logger.LogError("Failed to load home features.");
-                return View("Error");
+                ResultHomeFeatureDto emptyDto = new();
+                return View(emptyDto);
             }
         }
 

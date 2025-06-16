@@ -1,0 +1,53 @@
+﻿@model PersonalPortfolio.WebUI.Areas.Admin.Dtos.ResumeDtos.UpdateResumeDto
+@{
+    ViewData["Title"] = "Özgeçmiş";
+    ViewData["ActivePage"] = "Resume";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-700 mb-8">Özgeçmiş</h1>
+
+    <!-- Form -->
+    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Özgeçmiş</h2>
+        <form method="post" asp-area="Admin" asp-controller="Resume" asp-action="Update" enctype="multipart/form-data">
+
+            <!-- Pdf Dosyası -->
+            <div class="mb-6">
+                <label for="pdfFile" class="block text-sm font-medium text-gray-600">Özgeçmiş</label>
+                <div class="w-full h-40 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 p-4 cursor-pointer"
+                     onclick="document.getElementById('pdfFile').click()">
+                    <input type="file" id="pdfFile" asp-for="PdfFile" accept="application/pdf" class="hidden"
+                           onchange="previewImage(this, 'mainImagePreview')">
+                    <img id="mainImagePreview" class="hidden w-32 h-32 object-cover rounded-lg">
+                    <span id="imageLabel" class="text-gray-500 text-sm">Dosya Ekle</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="px-6 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-white">
+                    Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        const label = document.getElementById('imageLabel');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                label.classList.add('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

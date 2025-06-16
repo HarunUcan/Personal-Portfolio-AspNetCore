@@ -39,8 +39,7 @@ namespace PersonalPortfolio.WebUI.Areas.User.Controllers
                 }
                 else
                 {
-                    // Handle error response
-                    return View("Error");
+                    return View(aboutPageViewModel = new());
                 }
             }
         }
