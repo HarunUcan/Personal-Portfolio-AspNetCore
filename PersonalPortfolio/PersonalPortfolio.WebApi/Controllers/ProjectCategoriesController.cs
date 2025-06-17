@@ -92,7 +92,7 @@ namespace PersonalPortfolio.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteProjectCategory(int id)
         {
             var projectCategory = _context.ProjectCategories.Find(id);

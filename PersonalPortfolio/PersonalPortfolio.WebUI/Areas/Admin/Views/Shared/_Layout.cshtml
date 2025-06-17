@@ -90,8 +90,8 @@
                         </svg>
                     </button>
                     <div id="categories-submenu" class="@(ViewData["ActivePage"]?.ToString() == "Categories" ? "" : ViewData["ActivePage"]?.ToString() == "Category-Create" ? "" : "hidden")">
-                        <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Categories" ? "bg-pink-700" : "hover:bg-gray-700")">Mevcut Kategoriler</a>
-                        <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Category-Create" ? "bg-pink-700" : "hover:bg-gray-700")">Kategori Ekle</a>
+                        <a asp-area="Admin" asp-controller="ProjectCategory" asp-action="Index" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Categories" ? "bg-pink-700" : "hover:bg-gray-700")">Mevcut Kategoriler</a>
+                        <a asp-area="Admin" asp-controller="ProjectCategory" asp-action="Create" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Category-Create" ? "bg-pink-700" : "hover:bg-gray-700")">Kategori Ekle</a>
                     </div>
                 </div>
 
