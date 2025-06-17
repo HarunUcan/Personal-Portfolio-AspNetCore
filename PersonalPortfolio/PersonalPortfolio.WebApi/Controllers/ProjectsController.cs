@@ -102,8 +102,122 @@ namespace PersonalPortfolio.WebApi.Controllers
             _context.Projects.Add(newProject);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetProjects), new { id = newProject.ProjectId }, newProject);
+            return Ok();
         }
 
+        [Authorize]
+        [HttpPut("{id}")]
+        public IActionResult UpdateProject(int id, UpdateProjectDto updateProjectDto)
+        {
+            if (updateProjectDto == null)
+            {
+                return BadRequest("Project cannot be null.");
+            }
+
+            var existingProject = _context.Projects
+                .Include(p => p.ProjectImages)
+                .FirstOrDefault(p => p.ProjectId == id);
+
+            if (existingProject == null)
+            {
+                return NotFound($"Project with ID {id} not found.");
+            }
+
+            // Update project properties
+            existingProject.Name = updateProjectDto.Name;
+            existingProject.Description = updateProjectDto.Description;
+            existingProject.ProjectUrl = updateProjectDto.ProjectUrl;
+            existingProject.ProjectCategoryId = updateProjectDto.ProjectCategoryId;
+            existingProject.UpdatedAt = DateTime.UtcNow;
+
+            // Handle images
+            if (updateProjectDto.ProjectImages != null && updateProjectDto.ProjectImages.Any())
+            {
+                foreach (var image in updateProjectDto.ProjectImages)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        image.CopyTo(memoryStream);
+                        var projectImage = new ProjectImage
+                        {
+                            Url = Convert.ToBase64String(memoryStream.ToArray()),
+                            IsMain = false, // Default to false, you can change this logic as needed
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        existingProject.ProjectImages.Add(projectImage);
+                    }
+                }
+            }
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProject(int id)
+        {
+            var project = _context.Projects
+                .Include(p => p.ProjectImages)
+                .FirstOrDefault(p => p.ProjectId == id);
+
+            if (project == null)
+            {
+                return NotFound($"Project with ID {id} not found.");
+            }
+
+            _context.Projects.Remove(project);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteImage/{imageId}")]
+        public IActionResult DeleteImage(int imageId)
+        {
+            var projectImage = _context.ProjectImages.FirstOrDefault(pi => pi.ProjectImageId == imageId);
+            if (projectImage == null)
+            {
+                return NotFound($"Image with ID {imageId} not found.");
+            }
+            // If the image is the main image, we cannot delete it directly
+            if (projectImage.IsMain)
+            {
+                return BadRequest("Cannot delete the main image. Please set another image as main before deleting this one.");
+            }
+
+            _context.ProjectImages.Remove(projectImage);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("SetMainImage/{imageId}")]
+        public IActionResult SetMainImage(int imageId)
+        {
+            var projectImage = _context.ProjectImages.FirstOrDefault(pi => pi.ProjectImageId == imageId);
+            if (projectImage == null)
+            {
+                return NotFound($"Image with ID {imageId} not found.");
+            }
+
+            // Set all images to not main
+            var allImages = _context.ProjectImages.Where(pi => pi.ProjectId == projectImage.ProjectId).ToList();
+            foreach (var img in allImages)
+            {
+                img.IsMain = false;
+            }
+
+            // Set the selected image as main
+            projectImage.IsMain = true;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }

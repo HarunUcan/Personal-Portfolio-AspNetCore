@@ -1,0 +1,100 @@
+﻿@model PersonalPortfolio.WebUI.Areas.Admin.ViewModels.PortfolioCreatePageViewModel
+@{
+    ViewData["Title"] = "Proje Oluştur";
+    ViewData["ActivePage"] = "Portfolio-Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-700 mb-8">Portfolyo</h1>
+
+    <!-- Form -->
+    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Proje Oluştur</h2>
+        <form method="post" asp-area="Admin" asp-controller="Portfolio" asp-action="Create" enctype="multipart/form-data">
+            <div class="mb-6">
+                <label for="title" class="block text-sm font-medium text-gray-600">Başlık</label>
+                <input type="text" asp-for="CreatePortfolioDto.Name" id="title" placeholder="Proje başlığını giriniz..."
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="desc1" class="block text-sm font-medium text-gray-600">Açıklama</label>
+                <input type="text" asp-for="CreatePortfolioDto.Description" id="desc1" placeholder="Açıklama giriniz..."
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="websiteUrl" class="block text-sm font-medium text-gray-600">Website Adresi</label>
+                <input type="text" asp-for="CreatePortfolioDto.ProjectUrl" id="website-url" placeholder="ornek.com"
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="category" class="block text-sm font-medium text-gray-600">Kategori</label>
+                <select id="category" asp-for="CreatePortfolioDto.ProjectCategoryId"
+                        class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50">
+                    <option value="">Seçiniz...</option>
+                    @foreach (var category in Model.ResultProjectCategories)
+                    {
+                        <option value="@category.ProjectCategoryId">@category.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Proje Görselleri -->
+            <div class="mb-6">
+                <label for="additionalImages" class="block text-sm font-medium text-gray-600">
+                    Proje Görselleri
+                </label>
+                <div id="additionalImagesContainer"
+                     class="flex gap-2 flex-wrap border-2 border-dashed border-gray-300 p-4 rounded-lg items-center">
+                    <label class="add-button w-20 h-20 flex items-center justify-center bg-gray-100 text-gray-500 rounded-lg cursor-pointer border border-gray-300 self-center">
+                        <input type="file" id="additionalImages" asp-for="CreatePortfolioDto.ProjectImages" accept="image/*" multiple
+                               class="hidden" onchange="previewMultipleImages(this, 'additionalImagesContainer')">
+                        <span class="text-2xl font-bold">+</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="px-6 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-white">
+                    Ekle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewMultipleImages(input, containerId) {
+        const container = document.getElementById(containerId);
+        const existingImages = container.querySelectorAll('img');
+        const addButton = container.querySelector('.add-button');
+
+        if (input.files) {
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('relative', 'w-20', 'h-20', 'm-2');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg', 'border', 'border-gray-300');
+
+                    const deleteIcon = document.createElement('button');
+                    deleteIcon.innerHTML = '<i class="fa-solid fa-trash-can text-red-500 text-sm"></i>';
+                    deleteIcon.classList.add('absolute', 'top-[-20px]', 'right-[0px]', 'cursor-pointer', 'transform', 'translate-x-1/2', 'translate-y-1/2');
+                    deleteIcon.onclick = () => imgContainer.remove();
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(deleteIcon);
+                    container.insertBefore(imgContainer, addButton);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+</script>

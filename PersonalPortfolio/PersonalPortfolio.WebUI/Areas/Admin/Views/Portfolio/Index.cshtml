@@ -1,0 +1,74 @@
+﻿@model List<PersonalPortfolio.WebUI.Areas.Admin.Dtos.PortfolioDtos.ResultPortfolioDto>
+@{
+    ViewData["Title"] = "Mevcut Projeler";
+    ViewData["ActivePage"] = "Portfolio";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-700 mb-8">Mevcut Projeler</h1>
+
+    <!-- Coupon List -->
+    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Mevcut Projeler</h2>
+
+        <table class="w-full table-auto border-collapse">
+            <thead>
+                <tr>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Id</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Resim</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Başlık</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Açıklama</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Url</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">Kategori</th>
+                    <th class="border-b-2 py-4 text-left text-gray-600">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach(var project in Model)
+                {
+                    <tr>
+                        <td class="border-b py-4">@project.ProjectId</td>
+                        <td class="border-b py-4">
+                            <img src="data:image/jpeg;base64,@project.ProjectImages.FirstOrDefault().Url" class="w-12 h-12 rounded-md object-cover">
+                        </td>
+                        <td class="border-b py-4">@project.Name</td>    
+                        <td class="border-b py-4">@project.Description</td>
+                        <td class="border-b py-4">@project.ProjectUrl</td>
+                        <td class="border-b py-4">@project.ProjectCategory.Name</td>
+                        
+                        <td class="border-b py-4">
+                            <a asp-area="Admin" asp-controller="Portfolio" asp-action="Update" asp-route-id="@project.ProjectId"
+                               class="text-yellow-600 hover:text-yellow-800 transition"><i class="fas fa-edit" title="Düzenle"></i></a>
+                            <button onclick="confirmDelete(@project.ProjectId)" class="text-red-600 hover:text-red-800 transition" title="Sil"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function confirmDelete(portfolioId) {
+        Swal.fire({
+            title: "Emin misiniz?",
+            text: "Bu skill'i silmek istediğinize emin misiniz? Bu işlem geri alınamaz!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Evet, sil!",
+            cancelButtonText: "İptal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/Admin/Portfolio/Delete?id=${portfolioId}`;
+            }
+        });
+    }
+</script>
+
+

@@ -1,0 +1,159 @@
+﻿@model PersonalPortfolio.WebUI.Areas.Admin.ViewModels.PortfolioUpdatePageViewModel
+@{
+    ViewData["Title"] = "Proje Güncelle";
+    ViewData["ActivePage"] = "Portfolio-Update";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-700 mb-8">Portfolyo</h1>
+
+    <!-- Form -->
+    <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Proje Güncelle</h2>
+        <form method="post" asp-area="Admin" asp-controller="Portfolio" asp-action="Update" enctype="multipart/form-data">
+            
+            <input type="hidden" name="id" value="@Model.ResultPortfolioDto.ProjectId" />
+
+            <div class="mb-6">
+                <label for="title" class="block text-sm font-medium text-gray-600">Başlık</label>
+                <input type="text" asp-for="UpdatePortfolioDto.Name" id="title" placeholder="Proje başlığını giriniz..." value="@Model.ResultPortfolioDto.Name"
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="desc1" class="block text-sm font-medium text-gray-600">Açıklama</label>
+                <input type="text" asp-for="UpdatePortfolioDto.Description" id="desc1" placeholder="Açıklama giriniz..." value="@Model.ResultPortfolioDto.Description"
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="websiteUrl" class="block text-sm font-medium text-gray-600">Website Adresi</label>
+                <input type="text" asp-for="UpdatePortfolioDto.ProjectUrl" id="website-url" placeholder="ornek.com" value="@Model.ResultPortfolioDto.ProjectUrl"
+                       class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="category" class="block text-sm font-medium text-gray-600">Kategori</label>
+                <select id="category" asp-for="UpdatePortfolioDto.ProjectCategoryId"
+                        class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-gray-700 bg-gray-50">
+                    <option value="">Seçiniz...</option>
+                    @foreach (var category in Model.ResultProjectCategories)
+                    {
+                        if(category.ProjectCategoryId == Model.ResultPortfolioDto.ProjectCategoryId)
+                        {
+                            <option value="@category.ProjectCategoryId" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.ProjectCategoryId">@category.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- Yeni Görseller Ekle -->
+            <div class="mb-6">
+                <label for="additionalImages" class="block text-sm font-medium text-gray-600">
+                    Görsel Ekle
+                </label>
+                <div id="additionalImagesContainer"
+                     class="flex gap-2 flex-wrap border-2 border-dashed border-gray-300 p-4 rounded-lg items-center">
+                    <label class="add-button w-20 h-20 flex items-center justify-center bg-gray-100 text-gray-500 rounded-lg cursor-pointer border border-gray-300 self-center">
+                        <input type="file" id="additionalImages" asp-for="UpdatePortfolioDto.ProjectImages" accept="image/*" multiple
+                               class="hidden" onchange="previewMultipleImages(this, 'additionalImagesContainer')">
+                        <span class="text-2xl font-bold">+</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Mevcut Görseller -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-600">Mevcut Proje Görselleri</label>
+                <div id="currentImagesContainer" class="flex gap-2 flex-wrap border-2 border-dashed border-gray-300 p-4 rounded-lg items-center">
+                    @foreach (var image in Model.ResultPortfolioDto.ProjectImages)
+                    {
+                        <div class="relative w-28 m-2 flex flex-col items-center image-container">
+                            <img src="data:image/jpeg;base64,@image.Url" class="w-20 h-20 object-cover rounded-lg border border-gray-300">
+
+                            <!-- Ana Görsel Seçimi -->
+                            <a asp-area="Admin" asp-controller="Portfolio" asp-action="SetMainImage" asp-route-projectId="@Model.ResultPortfolioDto.ProjectId" asp-route-imageId="@image.ProjectImageId"
+                                    class="text-xs px-2 py-1 rounded @((image.IsMain) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700")">
+                                @(image.IsMain ? "Ana Görsel" : "Ana Yap")
+                            </a>
+
+                            <!-- Silme -->
+                            <a asp-area="Admin" asp-controller="Portfolio" asp-action="DeleteImage" asp-route-projectId="@Model.ResultPortfolioDto.ProjectId" asp-route-imageId="@image.ProjectImageId" class="absolute top-[-20px] right-[0px] cursor-pointer transform translate-x-1/2 translate-y-1/2">
+                                <i class="fa-solid fa-trash-can text-red-500 text-sm"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="px-6 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-white">
+                    Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewMultipleImages(input, containerId) {
+        const container = document.getElementById(containerId);
+        const addButton = container.querySelector('.add-button');
+
+        // 1️⃣ Önce tüm önceki ön izlemeleri ve dizi içeriğini temizle
+        const oldImages = container.querySelectorAll('.image-container');
+        oldImages.forEach(imgContainer => imgContainer.remove());
+
+        const dataTransfer = new DataTransfer();
+
+        Array.from(input.files).forEach((file, index) => {
+            dataTransfer.items.add(file); // Yeni listemizi oluşturuyoruz
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('relative', 'w-20', 'h-20', 'm-2', 'image-container');
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg', 'border', 'border-gray-300');
+
+                const deleteIcon = document.createElement('button');
+                deleteIcon.innerHTML = '<i class="fa-solid fa-trash-can text-red-500 text-sm"></i>';
+                deleteIcon.classList.add('absolute', 'top-[-20px]', 'right-[0px]', 'cursor-pointer', 'transform', 'translate-x-1/2', 'translate-y-1/2');
+                deleteIcon.onclick = () => {
+                    // Bu resme karşılık gelen index'i siliyoruz
+                    const newFiles = Array.from(dataTransfer.files).filter((f, i) => i !== index);
+
+                    // Yeni DataTransfer oluştur
+                    const newDataTransfer = new DataTransfer();
+                    newFiles.forEach(f => newDataTransfer.items.add(f));
+
+                    input.files = newDataTransfer.files; // input güncelle
+
+                    previewMultipleImages(input, containerId); // ekranı yeniden çiz
+                };
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteIcon);
+                container.insertBefore(imgContainer, addButton);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // En son güncellenmiş file listesi input'a atanıyor
+        input.files = dataTransfer.files;
+    }
+
+
+</script>
+
+
