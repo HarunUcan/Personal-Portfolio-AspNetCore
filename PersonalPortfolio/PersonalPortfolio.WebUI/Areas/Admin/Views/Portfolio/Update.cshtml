@@ -74,7 +74,7 @@
                     @foreach (var image in Model.ResultPortfolioDto.ProjectImages)
                     {
                         <div class="relative w-28 m-2 flex flex-col items-center image-container">
-                            <img src="data:image/jpeg;base64,@image.Url" class="w-20 h-20 object-cover rounded-lg border border-gray-300">
+                            <img src="@image.Url.Replace("wwwroot","")" class="w-20 h-20 object-cover rounded-lg border border-gray-300">
 
                             <!-- Ana Görsel Seçimi -->
                             <a asp-area="Admin" asp-controller="Portfolio" asp-action="SetMainImage" asp-route-projectId="@Model.ResultPortfolioDto.ProjectId" asp-route-imageId="@image.ProjectImageId"

@@ -6,7 +6,7 @@ namespace PersonalPortfolio.WebApi.Dtos.ProjectDtos
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public ICollection<IFormFile>? ProjectImages { get; set; }
+        public ICollection<string>? ProjectImages { get; set; }
         public string? ProjectUrl { get; set; }
 
         // Navigation properties

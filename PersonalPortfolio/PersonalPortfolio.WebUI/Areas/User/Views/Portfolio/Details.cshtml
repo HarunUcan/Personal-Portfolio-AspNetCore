@@ -42,7 +42,7 @@
                         @foreach(var image in Model.ProjectImages)
                         {
                             <div class="swiper-slide">
-                                <img src="data:image/jpeg;base64,@image.Url" alt="@Model.Name" class="img-fluid custom-img-style">
+                                <img src="@image.Url.Replace("wwwroot","")" alt="@Model.Name" class="img-fluid custom-img-style">
                             </div>
                         }
 

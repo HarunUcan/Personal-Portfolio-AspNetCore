@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ECommerceProject.BusinessLayer.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Newtonsoft.Json;
 using PersonalPortfolio.WebUI.Areas.Admin.Dtos.PortfolioDtos;
 using PersonalPortfolio.WebUI.Areas.Admin.Dtos.ProjectCategoryDtos;
+using PersonalPortfolio.WebUI.Areas.Admin.Dtos.ProjectImageDtos;
 using PersonalPortfolio.WebUI.Areas.Admin.ViewModels;
+using System.IO;
+using System.Text.Json;
 
 namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
 {
@@ -30,6 +34,13 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var projects = await response.Content.ReadFromJsonAsync<List<ResultPortfolioDto>>();
+                    foreach(var project in projects)
+                    {
+                        foreach(var image in project.ProjectImages)
+                        {
+                            image.Url = image.Url.Replace("wwwroot", "");
+                        }
+                    }
                     return View(projects);
                 }
             }
@@ -71,22 +82,45 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
                 content.Add(new StringContent(portfolioCreatePageViewModel.CreatePortfolioDto.ProjectUrl ?? ""), "ProjectUrl");
                 content.Add(new StringContent(portfolioCreatePageViewModel.CreatePortfolioDto.ProjectCategoryId.ToString()), "ProjectCategoryId");
 
-                // Profil resmi varsa ekle
+
+                // Proje resmi varsa ekle
                 if (portfolioCreatePageViewModel.CreatePortfolioDto.ProjectImages != null && portfolioCreatePageViewModel.CreatePortfolioDto.ProjectImages.Count > 0)
                 {
                     foreach (var image in portfolioCreatePageViewModel.CreatePortfolioDto.ProjectImages)
                     {
-                        var streamContent = new StreamContent(image.OpenReadStream());
-                        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.ContentType);
-                        content.Add(streamContent, "ProjectImages", image.FileName);
+                        string filePath = string.Empty;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            // Resmi wwwroot/uploads a kaydet
+                            await image.CopyToAsync(memoryStream);
+                            var imageData = memoryStream.ToArray();
+                            var imageName = image.FileName;
+
+                            filePath = await FileHelper.SaveFileAsync(imageData, $"{Guid.NewGuid()}{Path.GetExtension(imageName)}");
+                        }
+
+                        content.Add(new StringContent(filePath), "ProjectImages");
+
+                        //var streamContent = new StreamContent(image.OpenReadStream());
+                        //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.ContentType);
+                        //content.Add(streamContent, "ProjectImages", image.FileName);
                     }
                 }
 
-                var response = await client.PostAsync("https://localhost:7121/api/Projects", content);
+                try
+                {
+                    var response = await client.PostAsync("https://localhost:7121/api/Projects", content);
 
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index", "Portfolio", new { area = "Admin" });
-                return View("Error");
+                    if (response.IsSuccessStatusCode)
+                        return RedirectToAction("Index", "Portfolio", new { area = "Admin" });
+
+                    var errorMsg = await response.Content.ReadAsStringAsync();
+                    return Content($"Hata: {response.StatusCode} - {errorMsg}");
+                }
+                catch (Exception ex)
+                {
+                    return Content($"İstisna oluştu: {ex.Message}\n\n{ex.StackTrace}");
+                }
             }
         }
 
@@ -138,22 +172,44 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
                 content.Add(new StringContent(portfolioUpdatePageViewModel.UpdatePortfolioDto.ProjectUrl ?? ""), "ProjectUrl");
                 content.Add(new StringContent(portfolioUpdatePageViewModel.UpdatePortfolioDto.ProjectCategoryId.ToString()), "ProjectCategoryId");
 
-                // Profil resmi varsa ekle
+                // Proje resmi varsa ekle
                 if (portfolioUpdatePageViewModel.UpdatePortfolioDto.ProjectImages != null && portfolioUpdatePageViewModel.UpdatePortfolioDto.ProjectImages.Count > 0)
                 {
                     foreach (var image in portfolioUpdatePageViewModel.UpdatePortfolioDto.ProjectImages)
                     {
-                        var streamContent = new StreamContent(image.OpenReadStream());
-                        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.ContentType);
-                        content.Add(streamContent, "ProjectImages", image.FileName);
+                        string filePath = string.Empty;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            // Resmi wwwroot/uploads a kaydet
+                            await image.CopyToAsync(memoryStream);
+                            var imageData = memoryStream.ToArray();
+                            var imageName = image.FileName;
+
+                            filePath = await FileHelper.SaveFileAsync(imageData, $"{Guid.NewGuid()}{Path.GetExtension(imageName)}");
+
+                        }
+                        content.Add(new StringContent(filePath), "ProjectImages");
+
+                        //var streamContent = new StreamContent(image.OpenReadStream());
+                        //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.ContentType);
+                        //content.Add(streamContent, "ProjectImages", image.FileName);
                     }
                 }
 
-                var response = await client.PutAsync($"https://localhost:7121/api/Projects/{id}", content);
+                try
+                {
+                    var response = await client.PutAsync($"https://localhost:7121/api/Projects/{id}", content);
 
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index", "Portfolio", new { area = "Admin" });
-                return View("Error");
+                    if (response.IsSuccessStatusCode)
+                        return RedirectToAction("Index", "Portfolio", new { area = "Admin" });
+
+                    var errorMsg = await response.Content.ReadAsStringAsync();
+                    return Content($"Hata: {response.StatusCode} - {errorMsg}");
+                }
+                catch (Exception ex)
+                {
+                    return Content($"İstisna oluştu: {ex.Message}\n\n{ex.StackTrace}");
+                }
             }
         }
 
@@ -187,6 +243,19 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
 
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.DeleteAsync($"https://localhost:7121/api/Projects/DeleteImage/{imageId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    // imageUrl'i JSON'dan al
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var json = JsonDocument.Parse(jsonString);
+                    var imageUrl = json.RootElement.GetProperty("imageUrl").GetString();
+
+                    // wwwroot/uploads/... formatında gelen yolu olduğu gibi fiziksel tam yola çevir
+                    if (!string.IsNullOrEmpty(imageUrl))
+                    {
+                        FileHelper.DeleteFile(imageUrl);
+                    }
+                }
 
                 return RedirectToAction("Update", "Portfolio", new { area = "Admin", id = projectId });
             }

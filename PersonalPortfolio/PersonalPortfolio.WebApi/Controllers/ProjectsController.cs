@@ -62,23 +62,19 @@ namespace PersonalPortfolio.WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult CreateProject(CreateProjectDto createProjectDto)
+        public IActionResult CreateProject([FromForm]CreateProjectDto createProjectDto)
         {
             if (createProjectDto == null)
             {
                 return BadRequest("Project cannot be null.");
             }
 
-            List<byte[]> uploadedImages = new List<byte[]>();
+            List<string> uploadedImages = new List<string>();
             if (createProjectDto.ProjectImages != null && createProjectDto.ProjectImages.Any())
             {
                 foreach (var image in createProjectDto.ProjectImages)
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        image.CopyTo(memoryStream);
-                        uploadedImages.Add(memoryStream.ToArray());
-                    }
+                    uploadedImages.Add(image);
                 }
             }
 
@@ -90,7 +86,7 @@ namespace PersonalPortfolio.WebApi.Controllers
             {
                 projectImages.Add(new ProjectImage
                 {
-                    Url = Convert.ToBase64String(uploadedImages[i]),
+                    Url = uploadedImages[i],
                     IsMain = i == 0, // Set the first image as the main image
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -107,7 +103,7 @@ namespace PersonalPortfolio.WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(int id, UpdateProjectDto updateProjectDto)
+        public IActionResult UpdateProject(int id, [FromForm]UpdateProjectDto updateProjectDto)
         {
             if (updateProjectDto == null)
             {
@@ -135,18 +131,16 @@ namespace PersonalPortfolio.WebApi.Controllers
             {
                 foreach (var image in updateProjectDto.ProjectImages)
                 {
-                    using (var memoryStream = new MemoryStream())
+                    
+                    var projectImage = new ProjectImage
                     {
-                        image.CopyTo(memoryStream);
-                        var projectImage = new ProjectImage
-                        {
-                            Url = Convert.ToBase64String(memoryStream.ToArray()),
-                            IsMain = false, // Default to false, you can change this logic as needed
-                            CreatedAt = DateTime.UtcNow,
-                            UpdatedAt = DateTime.UtcNow
-                        };
-                        existingProject.ProjectImages.Add(projectImage);
-                    }
+                        Url = image,
+                        IsMain = false, // Default to false, you can change this logic as needed
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+                    existingProject.ProjectImages.Add(projectImage);
+                    
                 }
             }
 
@@ -189,10 +183,11 @@ namespace PersonalPortfolio.WebApi.Controllers
                 return BadRequest("Cannot delete the main image. Please set another image as main before deleting this one.");
             }
 
+            var imageUrl = projectImage.Url;
             _context.ProjectImages.Remove(projectImage);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(new { message = "Image deleted successfully.", imageUrl });
         }
 
         [Authorize]

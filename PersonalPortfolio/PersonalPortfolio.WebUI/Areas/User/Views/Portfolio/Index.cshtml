@@ -33,7 +33,7 @@
                 {
                     <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-@item.ProjectCategory.Name.ToLower().Trim().Replace(" ","-")">
                         <a asp-controller="Portfolio" asp-action="Details" asp-route-id="@item.ProjectId">
-                            <img src="data:image/jpeg;base64,@item.ProjectImages.FirstOrDefault().Url" class="img-fluid" alt="">
+                            <img src="@item.ProjectImages.FirstOrDefault().Url.Replace("wwwroot","")" class="img-fluid" alt="">
                         </a>
                         <div class="portfolio-info">
                             <h4>@item.Name</h4>
