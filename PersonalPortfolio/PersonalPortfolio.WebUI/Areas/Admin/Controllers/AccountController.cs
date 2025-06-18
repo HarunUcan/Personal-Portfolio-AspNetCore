@@ -71,7 +71,7 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
 
                         await HttpContext.SignInAsync("CookieAuth", principal);
 
-                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                     }
 
                     ModelState.AddModelError("", "Token alınamadı.");
@@ -83,6 +83,18 @@ namespace PersonalPortfolio.WebUI.Areas.Admin.Controllers
                     return View();
                 }
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            // Cookie'yi sil
+            HttpContext.Response.Cookies.Delete("access_token");
+
+            // Kimlik bilgisini kaldır
+            await HttpContext.SignOutAsync("CookieAuth");
+
+            return RedirectToAction("Login", "Account", new { area = "Admin" });
         }
     }
 }

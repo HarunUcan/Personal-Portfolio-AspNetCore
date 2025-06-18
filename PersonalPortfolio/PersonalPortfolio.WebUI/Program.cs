@@ -31,6 +31,8 @@ namespace PersonalPortfolio.WebUI
                 app.UseHsts();
             }
 
+            app.UseMiddleware<VisitorLoggingMiddleware>();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -47,7 +49,7 @@ namespace PersonalPortfolio.WebUI
             // 2. Diðer area'lar normal görünsün (örn: Admin)
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
             app.Run();
         }

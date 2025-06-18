@@ -135,6 +135,13 @@
                         <a asp-area="Admin" asp-controller="Portfolio" asp-action="Create" class="block py-2 pl-10 text-sm @(ViewData["ActivePage"]?.ToString() == "Portfolio-Create" ? "bg-pink-700" : "hover:bg-gray-700")">Proje Ekle</a>
                     </div>
                 </div>
+
+                <!-- Logout -->
+                <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="block w-full text-red-600 font-bold text-left py-3 px-6 hover:bg-gray-700">
+                        Çıkış Yap
+                    </button>
+                </form>
             </nav>
         </aside>
 
